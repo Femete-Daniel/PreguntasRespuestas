@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El reto FEMETE</title>
+<link rel="icon" href="logo.png">
+<style>
+:root{--bg1:#00355f;--bg2:#0068b4;--card:#fff;--ink:#17283a;--mut:#5d6b7a;--blue:#0068b4;--blue-d:#00457a;--red:#cc0c40;--grey:#b0b0b4;--line:#d5dee7;--soft:#f4f8fb;--tint:#e1effa;--ok:#12a150;--bad:#cc0c40;--sel:#0068b4}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;min-height:100vh}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;flex-wrap:wrap;border-bottom:5px solid var(--red);background:rgba(0,0,0,.12)}
+header h1{margin:0;display:flex;align-items:center;gap:14px;color:#fff;font-size:clamp(1.1rem,2.6vw,1.7rem);letter-spacing:.06em;text-transform:uppercase}
+.logo{background:#fff;border-radius:14px;padding:6px 14px;display:flex;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.logo img{height:clamp(34px,6vw,50px);display:block}
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:#fff;color:var(--blue);padding:7px 15px;border-radius:999px;font-weight:700;font-size:clamp(.85rem,1.8vw,1.05rem);box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.pill b{color:var(--red)}
+main{max-width:980px;margin:0 auto;padding:22px 16px 40px}
+.card{background:var(--card);border-radius:26px;padding:clamp(18px,4vw,40px);box-shadow:0 20px 50px rgba(0,0,0,.35);animation:up .45s ease both;border-top:8px solid var(--red)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.dots{display:flex;gap:8px;margin-bottom:14px;align-items:center;color:var(--mut);font-weight:700}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--line)}
+.dot.on{background:var(--blue)}.dot.ok{background:var(--ok)}.dot.bad{background:var(--bad)}
+.tema{display:inline-block;background:var(--tint);color:var(--blue);font-weight:700;border-radius:8px;padding:3px 10px;font-size:.85rem;margin-bottom:10px}
+h2.q{font-size:clamp(1.5rem,4.2vw,2.6rem);line-height:1.2;margin:0 0 22px;color:var(--ink)}
+.opts{display:grid;gap:14px}
+.opt{display:flex;align-items:center;gap:16px;text-align:left;width:100%;font:inherit;font-size:clamp(1.05rem,2.8vw,1.6rem);font-weight:600;color:var(--ink);background:var(--soft);border:3px solid var(--line);border-radius:18px;padding:16px 18px;cursor:pointer;transition:transform .15s,border-color .15s,background .15s}
+.opt:hover:not(:disabled){transform:translateY(-2px);border-color:var(--blue)}
+.opt .l{flex:none;width:2.2em;height:2.2em;border-radius:50%;background:var(--line);display:grid;place-items:center;font-weight:800}
+.opt.sel{border-color:var(--blue);background:var(--tint)}.opt.sel .l{background:var(--blue);color:#fff}
+.opt.ok{border-color:var(--ok);background:#e3f8ec;animation:pop .5s}.opt.ok .l{background:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:#fde7ea;animation:shake .45s}.opt.bad .l{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}.opt.dim{opacity:.55}
+@keyframes pop{50%{transform:scale(1.03)}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.fb{margin-top:18px;font-size:clamp(1.1rem,3vw,1.7rem);font-weight:800;padding:14px 18px;border-radius:14px;animation:up .3s}
+.fb.ok{background:#e3f8ec;color:var(--ok)}.fb.bad{background:#fde7ea;color:var(--bad)}
+.fb small{display:block;font-weight:600;color:var(--ink);font-size:.7em;margin-top:4px}
+.btn{font:inherit;font-weight:800;font-size:clamp(1.1rem,2.8vw,1.5rem);border:0;border-radius:16px;padding:16px 30px;cursor:pointer;background:linear-gradient(180deg,#1a86d0,var(--blue));color:#fff;box-shadow:0 6px 0 var(--blue-d);transition:transform .1s,box-shadow .1s}
+.btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 var(--blue-d)}
+.btn:disabled{background:#dfe5ea;color:#8a96a3;box-shadow:none;cursor:not-allowed}
+.btn.sec{background:var(--tint);color:var(--blue);box-shadow:0 5px 0 #b9d4e9}
+.act{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.center{text-align:center}
+.big{font-size:clamp(4rem,14vw,8rem);line-height:1;margin:6px 0}
+.slogo{height:clamp(64px,13vw,100px);max-width:100%}
+.score{font-size:clamp(2.4rem,9vw,5rem);font-weight:900;color:var(--blue)}
+.msg{font-size:clamp(1.4rem,4.5vw,2.6rem);font-weight:800;margin:8px 0 6px}
+.card.win{background:linear-gradient(135deg,var(--tint),#fff)}
+.card.gold{background:radial-gradient(circle at 50% 0,#fff,var(--tint) 70%);border:6px solid var(--red);animation:up .5s,glow 1.2s ease-in-out infinite alternate}
+.card.gold .score{color:var(--red)}.card.gold .msg{color:var(--blue);font-size:clamp(1.8rem,6.5vw,3.6rem)}
+.card.gold .big{animation:bounce 1s ease infinite}
+@keyframes glow{from{box-shadow:0 0 30px 4px rgba(143,208,255,.7)}to{box-shadow:0 0 80px 18px rgba(204,12,64,.55)}}
+@keyframes bounce{50%{transform:scale(1.18) rotate(-6deg)}}
+.box{border-radius:14px;padding:12px 16px;margin:12px 0;font-size:1rem;text-align:left}
+.box.err{background:#fde7ea;color:#7d1020}.box.warn{background:#fff4d6;color:#6b4a00}.box.info{background:var(--tint);color:#0b3a63}
+.box ul{margin:6px 0 0;padding-left:20px;max-height:220px;overflow:auto}
+.stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.stat{background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:10px 18px;font-weight:700}.stat b{display:block;font-size:1.8rem;color:var(--blue)}
+label.chk{display:inline-flex;gap:8px;align-items:center;font-weight:600;cursor:pointer}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px;align-items:center}
+.hint{color:var(--mut);font-size:.9rem;margin-top:14px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<header>
+  <h1><span class="logo"><img src="logo.png" alt="FEMETE" onerror="this.replaceWith('FEMETE')"></span><span>El reto</span></h1>
+  <div class="pills" id="pills"></div>
+</header>
+<main id="app"></main>
+
+<!-- Copia local del CSV (la genera convertir_csv.py). Es opcional: si falta, la app lo indica. -->
+<script src="preguntas.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), app=$("#app"), pills=$("#pills");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s==null?"":s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
+const LET=["A","B","C"], PER=3;
+const CSV_NAME="FEMETE_150_preguntas.csv";
+let D={qs:[],errors:[],warnings:[],source:"",text:null,meta:null,note:"",sinCab:false}, S=null, screen="start", shuffleOn=true;
+
+/* ---------- Lectura del CSV (separador ; , o tabulador; comillas; BOM; CRLF) ---------- */
+function decode(buf){ try{return new TextDecoder("utf-8",{fatal:true}).decode(buf);}catch(e){return new TextDecoder("windows-1252").decode(buf);} }
+function parseCSV(t){
+  t=t.replace(/^\uFEFF/,"");
+  const nl=t.indexOf("\n"), head=t.slice(0,nl<0?t.length:nl), cnt={";":0,",":0,"\t":0}; let q=false;
+  for(const ch of head){ if(ch==='"')q=!q; else if(!q&&ch in cnt)cnt[ch]++; }
+  const d=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0], rows=[]; let r=[],f="",inq=false;
+  for(let i=0;i<t.length;i++){
+    const ch=t[i];
+    if(inq){ if(ch==='"'){ if(t[i+1]==='"'){f+='"';i++;} else inq=false; } else f+=ch; }
+    else if(ch==='"'&&f==="") inq=true;
+    else if(ch===d){ r.push(f); f=""; }
+    else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&t[i+1]==="\n")i++; r.push(f); rows.push(r); r=[]; f=""; }
+    else f+=ch;
+  }
+  if(f!==""||r.length){ r.push(f); rows.push(r); }
+  return rows;
+}
+/* ---------- Validación ---------- */
+function parse(filas){
+  const qs=[],errors=[],warnings=[];
+  let h=filas.findIndex(r=>{const n=r.map(norm);return n.includes("pregunta")&&n.includes("correcta");}), sinCab=h<0, c;
+  if(sinCab){ /* sin cabecera: columnas por posición */
+    const w=Math.max(0,...filas.map(r=>r.length));
+    c={id:0,tema:1,p:2,o:[3,4,5],k:6,t:w>=9?7:-1};
+  } else {
+    const H=filas[h].map(norm), col=n=>H.indexOf(n);
+    c={id:col("id"),tema:col("tema"),p:col("pregunta"),o:[col("opcion a"),col("opcion b"),col("opcion c")],k:col("correcta"),t:col("respuesta correcta")};
+    const falta=[];
+    if(c.p<0)falta.push("Pregunta"); c.o.forEach((x,i)=>{if(x<0)falta.push("Opción "+LET[i]);}); if(c.k<0)falta.push("Correcta");
+    if(falta.length) return {qs,errors:["Faltan columnas obligatorias: "+falta.join(", ")+"."],warnings,sinCab};
+  }
+  const ids=new Set(), texts=new Map();
+  for(let i=h+1;i<filas.length;i++){ /* h=-1 si no hay cabecera */
+    const r=filas[i]||[], v=j=>j<0?"":String(r[j]==null?"":r[j]).trim();
+    if(!r.some(x=>String(x==null?"":x).trim()!=="")) continue;
+    const id=v(c.id), nom="Fila "+(i+1)+(id?" (ID "+id+")":"");
+    const e=[], p=v(c.p), opts=c.o.map(v), k=v(c.k).toUpperCase();
+    if(!p) e.push("falta el enunciado");
+    opts.forEach((o,j)=>{if(!o)e.push("falta la Opción "+LET[j]);});
+    if(opts.every(Boolean)&&new Set(opts.map(norm)).size<3) e.push("hay opciones repetidas");
+    const ki=LET.indexOf(k);
+    if(!k) e.push('falta la respuesta correcta (columna "Correcta")');
+    else if(ki<0||k.length!==1) e.push('la respuesta correcta "'+v(c.k)+'" no es A, B ni C');
+    else if(c.t>=0&&v(c.t)&&opts[ki]&&norm(v(c.t))!==norm(opts[ki])) e.push('la letra correcta ('+k+') no coincide con el texto de "Respuesta correcta"');
+    if(id){ if(ids.has(id)) e.push("ID repetido"); ids.add(id); }
+    if(e.length){ errors.push(nom+": "+e.join("; ")+"."); continue; }
+    const key=norm(p); if(texts.has(key)) warnings.push(nom+": enunciado repetido (igual que "+texts.get(key)+")."); else texts.set(key,nom);
+    qs.push({id:id||String(qs.length+1),tema:v(c.tema),p,o:opts,k:ki});
+  }
+  if(!errors.length&&qs.length<PER) errors.push("Se necesitan al menos "+PER+" preguntas válidas y solo hay "+qs.length+".");
+  return {qs,errors,warnings,sinCab};
+}
+function load(text,source,meta){ const r=parse(parseCSV(text)); D={...r,source,text,meta,note:""}; S=null; screen="start"; render(); }
+
+/* ---------- Sesión ---------- */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
+function newSession(){
+  const idx=D.qs.map((_,i)=>i); if(shuffleOn) shuffle(idx);
+  const nb=Math.floor(idx.length/PER);
+  S={idx,nb,left:idx.slice(nb*PER),b:0,pos:0,score:0,res:[],checked:false,sel:null};
+  screen="q"; render();
+}
+const cur=()=>D.qs[S.idx[S.b*PER+S.pos]];
+
+/* ---------- Acciones ---------- */
+function select(i){ if(screen!=="q"||S.checked) return; S.sel=i; render(false); }
+function check(){
+  if(S.checked||S.sel==null) return;
+  const ok=S.sel===cur().k; S.checked=true; S.res[S.pos]=ok; if(ok) S.score++; render(false);
+}
+function next(){
+  if(!S.checked) return;
+  if(S.pos<PER-1){ S.pos++; S.checked=false; S.sel=null; screen="q"; render(); }
+  else { screen="res"; render(); celebrate(); }
+}
+function nextPlayer(){
+  if(S.b<S.nb-1){ S.b++; S.pos=0; S.score=0; S.res=[]; S.checked=false; S.sel=null; screen="q"; }
+  else screen="end";
+  render();
+}
+function restart(){ if(confirm("Se barajarán todas las preguntas y empezará una sesión nueva desde el participante 1. ¿Continuar?")) newSession(); }
+
+/* ---------- Pantallas ---------- */
+const MSG=[
+  ["🙈","¡Ups! Hoy las preguntas han ganado… ¡pero tu simpatía no tiene rival!","Cero aciertos, cero problemas: ¡gracias por jugar!"],
+  ["💪","¡Buen intento! Un acierto y mucha energía.","¡La próxima vez seguro que cae más!"],
+  ["🏆","¡Has ganado! ¡Muy bien!","¡2 de 3! Enhorabuena."],
+  ["🌟","¡GUAU, ERES INCREÍBLE! ¡3 DE 3!","¡Puntuación perfecta!"]];
+function pillsHTML(){
+  if(!S||screen==="start"||screen==="end"){pills.innerHTML="";return;}
+  pills.innerHTML='<span class="pill">Participante <b>'+(S.b+1)+'</b> · bloque '+(S.b+1)+' de '+S.nb+'</span>'+
+    '<span class="pill">Aciertos: <b>'+S.score+'/'+PER+'</b></span>';
+}
+function render(anim){
+  pillsHTML();
+  if(screen==="start") return viewStart();
+  if(screen==="q") return viewQ(anim!==false);
+  if(screen==="res") return viewRes();
+  return viewEnd();
+}
+function viewStart(){
+  const n=D.qs.length, nb=Math.floor(n/PER), left=n-nb*PER, bad=D.errors.length>0;
+  let h='<div class="card center"><div class="big"><img class="slogo" src="logo.png" alt="FEMETE" onerror="this.remove()"></div><h2 class="msg">Preparado para el concurso</h2>';
+  if(D.note) h+='<div class="box err">'+esc(D.note)+'</div>';
+  if(D.text){
+    h+='<p class="hint" style="margin:0">Datos: '+esc(D.source)+'</p>';
+    h+='<div class="stats"><div class="stat"><b>'+n+'</b>preguntas válidas</div><div class="stat"><b>'+nb+'</b>bloques de '+PER+'</div>'+(left?'<div class="stat"><b>'+left+'</b>sobrantes</div>':'')+'</div>';
+  } else if(!D.note) h+='<div class="box warn">No se han encontrado datos. Pulsa «Cargar CSV…» y elige tu archivo de preguntas, o genera <b>preguntas.js</b> con convertir_csv.py y déjalo junto a este archivo.</div>';
+  if(D.sinCab&&D.text) h+='<div class="box info">El CSV no tiene fila de cabecera: se han leído las columnas por posición (ID; Tema; Pregunta; Opción A; B; C; Correcta; Respuesta correcta).</div>';
+  if(left&&!bad) h+='<div class="box warn">El total ('+n+') no es múltiplo de '+PER+': <b>'+left+' pregunta(s) no se usarán</b> porque no completan un bloque. Se te recordará al final de la sesión.</div>';
+  if(bad) h+='<div class="box err"><b>No se puede empezar: hay '+D.errors.length+' problema(s) en los datos.</b> Corrígelos en el CSV y vuelve a cargarlo:<ul>'+D.errors.map(e=>'<li>'+esc(e)+'</li>').join("")+'</ul></div>';
+  if(D.warnings.length) h+='<div class="box warn"><b>Avisos (no impiden jugar):</b><ul>'+D.warnings.map(e=>'<li>'+esc(e)+'</li>').join("")+'</ul></div>';
+  h+='<div class="row"><label class="chk"><input type="checkbox" id="shuf" '+(shuffleOn?"checked":"")+'> Orden aleatorio de preguntas</label></div>';
+  h+='<div class="row"><button class="btn" id="go" '+(bad||!D.text?"disabled":"")+'>Comenzar</button>'+
+     '<button class="btn sec" id="pick">Cargar CSV…</button>'+
+     (D.meta&&D.meta.fromCsv&&!bad?'<button class="btn sec" id="save">Guardar como preguntas.js</button>':'')+'</div>';
+  h+='<p class="hint">Con «Guardar como preguntas.js» y copiando ese archivo junto a index.html, los datos se cargarán solos al abrir la aplicación (o ejecuta convertir_csv.py).</p>';
+  h+='<input type="file" id="file" accept=".csv,.txt" hidden></div>';
+  app.innerHTML=h;
+  $("#shuf").onchange=e=>shuffleOn=e.target.checked;
+  $("#pick").onclick=()=>$("#file").click();
+  $("#file").onchange=e=>{const f=e.target.files[0]; if(f) readCsv(f);};
+  if($("#go")) $("#go").onclick=newSession;
+  if($("#save")) $("#save").onclick=saveJs;
+}
+function viewQ(anim){
+  const q=cur(), done=S.checked;
+  let dots='<div class="dots"><span>Pregunta '+(S.pos+1)+' de '+PER+'</span>';
+  for(let i=0;i<PER;i++) dots+='<span class="dot '+(S.res[i]===true?"ok":S.res[i]===false?"bad":i===S.pos?"on":"")+'"></span>';
+  dots+='</div>';
+  let h='<div class="card" '+(anim?"":'style="animation:none"')+'>'+dots+(q.tema?'<span class="tema">'+esc(q.tema)+'</span>':"")+'<h2 class="q">'+esc(q.p)+'</h2><div class="opts">';
+  q.o.forEach((t,i)=>{
+    let cl="opt";
+    if(done){ if(i===q.k)cl+=" ok"; else if(i===S.sel)cl+=" bad"; else cl+=" dim"; }
+    else if(i===S.sel) cl+=" sel";
+    h+='<button class="'+cl+'" data-i="'+i+'" '+(done?"disabled":"")+'><span class="l">'+LET[i]+'</span><span>'+esc(t)+'</span></button>';
+  });
+  h+='</div>';
+  if(done){
+    const ok=S.res[S.pos];
+    h+='<div class="fb '+(ok?"ok":"bad")+'">'+(ok?"✅ ¡Correcto!":"❌ Fallaste")+(ok?"":'<small>La respuesta correcta era la '+LET[q.k]+': '+esc(q.o[q.k])+'</small>')+'</div>';
+  }
+  h+='<div class="act"><button class="btn" id="main" '+(!done&&S.sel==null?"disabled":"")+'>'+(!done?"Comprobar respuesta":S.pos<PER-1?"Siguiente pregunta":"Ver resultado")+'</button></div></div>';
+  app.innerHTML=h;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>select(+b.dataset.i));
+  $("#main").onclick=()=>done?next():check();
+}
+function viewRes(){
+  const s=S.score, m=MSG[s], cls=s===3?"gold":s===2?"win":"";
+  app.innerHTML='<div class="card center '+cls+'"><div class="big">'+m[0]+'</div><div class="score">'+s+' / '+PER+'</div><h2 class="msg">'+m[1]+'</h2><p style="font-size:1.3rem;margin:4px 0 0;font-weight:600">'+m[2]+'</p>'+
+    '<div class="act" style="justify-content:center"><button class="btn" id="np">'+(S.b<S.nb-1?"Siguiente participante":"Finalizar sesión")+'</button></div></div>';
+  $("#np").onclick=nextPlayer;
+}
+function viewEnd(){
+  let h='<div class="card center"><div class="big">🏁</div><h2 class="msg">¡Se han terminado las preguntas!</h2><div class="stats"><div class="stat"><b>'+S.nb+'</b>participantes</div><div class="stat"><b>'+S.nb*PER+'</b>preguntas jugadas</div></div>';
+  if(S.left.length) h+='<div class="box warn"><b>'+S.left.length+' pregunta(s) sobrante(s) sin usar</b> (no completan un bloque de '+PER+'): ID '+esc(S.left.map(i=>D.qs[i].id).join(", "))+'.</div>';
+  h+='<div class="row"><button class="btn" id="rs">Reiniciar sesión</button><button class="btn sec" id="dt">Volver a datos</button></div></div>';
+  app.innerHTML=h; pills.innerHTML="";
+  $("#rs").onclick=restart; $("#dt").onclick=()=>{screen="start";render();};
+}
+
+/* ---------- Celebración ---------- */
+function celebrate(){ if(S.score>=2) confetti(S.score===3?260:120); }
+function confetti(n){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv=$("#fx"), x=cv.getContext("2d"); cv.width=innerWidth; cv.height=innerHeight;
+  const cols=["#ffffff","#cc0c40","#8fd0ff","#b0b0b4","#ff5c85"];
+  const P=Array.from({length:n},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.6,vx:Math.random()*4-2,vy:2+Math.random()*4,s:6+Math.random()*8,r:Math.random()*6,c:cols[Math.random()*cols.length|0]}));
+  let t=0;(function f(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=.12;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore();});if(++t<300)requestAnimationFrame(f);else x.clearRect(0,0,cv.width,cv.height);})();
+}
+
+/* ---------- Carga de CSV y guardado de preguntas.js ---------- */
+async function readCsv(f){
+  try{ load(decode(await f.arrayBuffer()),f.name+" (cargado ahora)",{archivo:f.name,generado:new Date().toISOString(),fromCsv:true}); }
+  catch(e){ D.note="No se pudo leer «"+f.name+"»: "+e.message; render(); }
+}
+function saveJs(){
+  const m=D.meta, txt="window.PREGUNTAS_DATA = "+JSON.stringify({archivo:m.archivo,generado:m.generado,csv:D.text})+";\n";
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([txt],{type:"text/javascript"})); a.download="preguntas.js"; a.click();
+}
+
+/* ---------- Teclado: 1-3 / A-C eligen, Enter comprueba o avanza ---------- */
+document.addEventListener("keydown",e=>{
+  if(screen!=="q"||e.ctrlKey||e.metaKey||e.altKey) return;
+  const k=e.key.toUpperCase(), i="123".indexOf(k)>=0?"123".indexOf(k):LET.indexOf(k);
+  if(k.length===1&&i>=0){ select(i); return; }
+  if(e.key==="Enter"){ e.preventDefault(); S.checked?next():check(); }
+});
+
+/* ---------- Arranque: 1) CSV directo (solo si se sirve por http://) 2) preguntas.js 3) botón «Cargar CSV…» ---------- */
+async function boot(){
+  if(location.protocol.indexOf("http")===0){
+    try{ const r=await fetch(CSV_NAME,{cache:"no-store"});
+      if(r.ok){ load(decode(await r.arrayBuffer()),CSV_NAME+" (leído directamente de la carpeta)",{archivo:CSV_NAME,generado:new Date().toISOString()}); return; } }catch(e){}
+  }
+  const d=window.PREGUNTAS_DATA;
+  if(d&&typeof d.csv==="string") load(d.csv,"preguntas.js (de "+(d.archivo||"CSV")+", generado "+String(d.generado||"?").replace("T"," ")+")",{archivo:d.archivo,generado:d.generado});
+  else render();
+}
+boot();
+})();
+</script>
+</body>
+</html>
